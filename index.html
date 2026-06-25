@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة الأولى باك | تميز وتنافس حقيقي</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: 'Cairo', 'Poppins', sans-serif; background: linear-gradient(135deg, #0b0f19 0%, #111827 100%); }
+        .hidden-section { display: none !important; }
+    </style>
+</head>
+<body class="text-slate-200 min-h-screen flex flex-col justify-between">
+
+    <header class="w-full border-b border-slate-800/80 bg-slate-900/50 backdrop-blur-md px-6 py-4 flex justify-between items-center">
+        <div>
+            <span class="text-xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">1BAC CHAMPIONS</span>
+        </div>
+        <div class="flex items-center gap-2 border border-slate-700/60 rounded-lg px-2 py-1 bg-slate-800/40">
+            <button onclick="switchLanguage('ar')" id="lang-ar" class="text-xs px-2.5 py-1 rounded-md bg-cyan-600 text-white font-medium transition-all">العربية</button>
+            <button onclick="switchLanguage('fr')" id="lang-fr" class="text-xs px-2.5 py-1 rounded-md text-slate-400 hover:text-slate-200 transition-all">Français</button>
+            <button onclick="switchLanguage('en')" id="lang-en" class="text-xs px-2.5 py-1 rounded-md text-slate-400 hover:text-slate-200 transition-all">English</button>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center py-12 px-4">
+        
+        <section id="auth-section" class="max-w-md w-full p-8 bg-slate-900/90 border border-slate-800 rounded-2xl shadow-2xl transition-all duration-500">
+            <div class="text-center mb-6">
+                <h2 id="auth-title" class="text-2xl font-bold text-white">انضم إلى أبطال الأولى باك</h2>
+                <p id="auth-subtitle" class="text-slate-400 text-xs mt-1">سجل حسابك لتخوض التحدي وتجمع نقاط التميز</p>
+            </div>
+
+            <div class="space-y-3 mb-6">
+                <button onclick="loginWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-100 text-slate-900 font-semibold py-2.5 px-4 rounded-xl shadow-sm transition-all text-sm cursor-pointer">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5.04c1.64 0 3.12.56 4.28 1.67l3.2-3.2C17.52 1.58 14.94 1 12 1 7.24 1 3.2 3.74 1.24 7.74l3.84 2.98C6.02 7.2 8.76 5.04 12 5.04z"/><path fill="#4285F4" d="M23.5 12.25c0-.82-.07-1.6-.2-2.35H12v4.45h6.45c-.28 1.47-1.1 2.72-2.35 3.56v2.95h3.8c2.22-2.05 3.5-5.07 3.5-8.61z"/><path fill="#FBBC05" d="M5.08 14.72c-.23-.69-.36-1.43-.36-2.2s.13-1.51.36-2.2L1.24 7.34C.44 8.94 0 10.74 0 12.6s.44 3.66 1.24 5.26l3.84-3.14z"/><path fill="#34A853" d="M12 23c3.24 0 5.97-1.08 7.96-2.92l-3.8-2.95c-1.05.7-2.4 1.13-4.16 1.13-3.24 0-5.98-2.16-6.96-5.68l-3.84 2.98C3.2 20.26 7.24 23 12 23z"/></svg>
+                    <span id="btn-google">التسجيل بواسطة Google</span>
+                </button>
+            </div>
+
+            <div class="relative flex py-2 items-center my-4">
+                <div class="flex-grow border-t border-slate-800"></div>
+                <span id="auth-or" class="flex-shrink mx-4 text-slate-500 text-xs uppercase">أو بالطريقة التقليدية</span>
+                <div class="flex-grow border-t border-slate-800"></div>
+            </div>
+
+            <form onsubmit="event.preventDefault(); handleLogin();" class="space-y-4">
+                <div>
+                    <label id="lbl-email" class="block text-xs font-medium mb-1 text-slate-400">البريد الإلكتروني</label>
+                    <input type="email" placeholder="you@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-cyan-500 transition-colors" required>
+                </div>
+                <div>
+                    <label id="lbl-password" class="block text-xs font-medium mb-1 text-slate-400">كلمة المرور</label>
+                    <input type="password" placeh]older="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-cyan-500 transition-colors" required>
+                </div>
+                <button type="submit" id="btn-submit" class="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold py-2.5 rounded-xl shadow-lg text-sm transition-all cursor-pointer">
+                    إنشاء حساب
+                </button>
+            </form>
+        </section>
+
+        <section id="branch-section" class="max-w-5xl w-full px-4 hidden-section transition-all duration-500">
+            <div class="text-center mb-10">
+                <h2 id="branch-title" class="text-2xl font-bold text-white">اختر شعبتك الدراسية</h2>
+                <p id="branch-subtitle" class="text-slate-400 mt-1 text-sm">تحديد الشعبة يفتح لك ممرات التنافس الخاصة بموادك</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div onclick="selectBranch('Sciences Mathématiques')" class="bg-slate-900 border border-slate-800 p-6 rounded-xl hover:border-cyan-500 transition-all cursor-pointer text-center group">
+                    <div class="w-12 h-12 bg-cyan-500/10 text-cyan-400 flex items-center justify-center rounded-lg mx-auto mb-4 font-bold text-xl">∑</div>
+                    <h3 class="font-bold text-lg text-white mb-2">Sciences Mathématiques</h3>
+                </div>
+                <div onclick="selectBranch('Sciences Expérimentales')" class="bg-slate-900 border border-slate-800 p-6 rounded-xl hover:border-emerald-500 transition-all cursor-pointer text-center group">
+                    <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 flex items-center justify-center rounded-lg mx-auto mb-4 font-bold text-xl">🧬</div>
+                    <h3 class="font-bold text-lg text-white mb-2">Sciences Expérimentales</h3>
+                </div>
+                <div onclick="selectBranch('Sciences Économiques')" class="bg-slate-900 border border-slate-800 p-6 rounded-xl hover:border-amber-500 transition-all cursor-pointer text-center group">
+                    <div class="w-12 h-12 bg-amber-500/10 text-amber-400 flex items-center justify-center rounded-lg mx-auto mb-4 font-bold text-xl">$</div>
+                    <h3 class="font-bold text-lg text-white mb-2">Sciences Économiques</h3>
+                </div>
+                <div onclick="selectBranch('Lettres')" class="bg-slate-900 border border-slate-800 p-6 rounded-xl hover:border-fuchsia-500 transition-all cursor-pointer text-center group">
+                    <div class="w-12 h-12 bg-fuchsia-500/10 text-fuchsia-400 flex items-center justify-center rounded-lg mx-auto mb-4 font-bold text-xl">✍️</div>
+                    <h3 class="font-bold text-lg text-white mb-2">Lettres & Sciences Humaines</h3>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-4 text-[10px] text-slate-600 border-t border-slate-900">
+        منصة 1BAC التنافسية المحترفة © 2026
+    </footer>
+
+    <script>
+        // ربط مشروعك الحقيقي بـ Supabase
+        const SUPABASE_URL = "https://xqpagwwjegporkgyvkdw.supabase.co"; 
+        const SUPABASE_ANON_KEY = "sb_publishable_EHK8PHZFyKPIOwGb7tey1w_oMSdC5u0A"; // <--- ضع مفتاحك الكامل هنا
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // الدالة الرسمية التي تستدعي نافذة غوغل المنبثقة
+        async function loginWithGoogle() {
+            try {
+                const { data, error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.href 
+                    }
+                });
+                if (error) throw error;
+            } catch (error) {
+                console.error("خطأ في الاتصال الفعلي:", error.message);
+                // محاكاة للتنقل السريع في البيئة المحلية قبل رفع الموقع أونلاين
+                handleLogin(); 
+            }
+        }
+
+        function handleLogin() {
+            document.getElementById('auth-section').classList.add('hidden-section');
+            document.getElementById('branch-section').classList.remove('hidden-section');
+        }
+
+        function selectBranch(branchName) {
+            alert("رائع! اخترت شعبة: " + branchName + "\nالمرحلة القادمة هي بناء واجهة المواد والترتيب!");
+        }
+
+        // نظام الترجمة
+        const translations = {
+            ar: {
+                title: "انضم إلى أبطال الأولى باك", subtitle: "سجل حسابك لتخوض التحدي وتجمع نقاط التميز",
+                google: "التسجيل بواسطة Google", or: "أو بالطريقة التقليدية", email: "البريد الإلكتروني",
+                pass: "كلمة المرور", submit: "إنشاء حساب", bTitle: "اختر شعبتك الدراسية", bSub: "تحديد الشعبة يفتح لك ممرات التنافس الخاصة بموادك"
+            },
+            fr: {
+                title: "Rejoignez les Champions de 1BAC", subtitle: "Créez votre compte pour relever le défi et cumuler des points",
+                google: "S'inscrire avec Google", or: "Ou par méthode classique", email: "E-mail",
+                pass: "Mot de passe", submit: "Créer un compte", bTitle: "Choisissez votre branche", bSub: "Votre branche débloque vos matières et vos compétitions"
+            },
+            en: {
+                title: "Join 1BAC Champions", subtitle: "Create your account to take the challenge and earn points",
+                google: "Sign up with Google", or: "Or using classic method", email: "Email Address",
+                pass: "Password", submit: "Create Account", bTitle: "Choose Your Branch", bSub: "Selecting your branch unlocks your competitive subjects"
+            }
+        };
+
+        function switchLanguage(lang) {
+            ['ar', 'fr', 'en'].forEach(l => {
+                document.getElementById('lang-' + l).className = "text-xs px-2.5 py-1 rounded-md text-slate-400 hover:text-slate-200 transition-all";
+            });
+            document.getElementById('lang-' + lang).className = "text-xs px-2.5 py-1 rounded-md bg-cyan-600 text-white font-medium transition-all";
+
+            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+
+            document.getElementById('auth-title').innerText = translations[lang].title;
+            document.getElementById('auth-subtitle').innerText = translations[lang].subtitle;
+            document.getElementById('btn-google').innerText = translations[lang].google;
+            document.getElementById('auth-or').innerText = translations[lang].or;
+            document.getElementById('lbl-email').innerText = translations[lang].email;
+            document.getElementById('lbl-password').innerText = translations[lang].pass;
+            document.getElementById('btn-submit').innerText = translations[lang].submit;
+            document.getElementById('branch-title').innerText = translations[lang].bTitle;
+            document.getElementById('branch-subtitle').innerText = translations[lang].bSub;
+        }
+    </script>
+</body>
+</html>
