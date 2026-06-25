@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- استدعاء مكتبة Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { font-family: 'Cairo', 'Poppins', sans-serif; background: linear-gradient(135deg, #0b0f19 0%, #111827 100%); }
@@ -36,9 +37,10 @@
             </div>
 
             <div class="space-y-3 mb-6">
-                <button onclick="loginWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-100 text-slate-900 font-semibold py-2.5 px-4 rounded-xl shadow-sm transition-all text-sm cursor-pointer">
+                <!-- إضافة معرف id="btn-google" للزر لتتمكن جافا سكريبت من التقاط الضغطة بنجاح -->
+                <button id="btn-google" class="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-100 text-slate-900 font-semibold py-2.5 px-4 rounded-xl shadow-sm transition-all text-sm cursor-pointer">
                     <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5.04c1.64 0 3.12.56 4.28 1.67l3.2-3.2C17.52 1.58 14.94 1 12 1 7.24 1 3.2 3.74 1.24 7.74l3.84 2.98C6.02 7.2 8.76 5.04 12 5.04z"/><path fill="#4285F4" d="M23.5 12.25c0-.82-.07-1.6-.2-2.35H12v4.45h6.45c-.28 1.47-1.1 2.72-2.35 3.56v2.95h3.8c2.22-2.05 3.5-5.07 3.5-8.61z"/><path fill="#FBBC05" d="M5.08 14.72c-.23-.69-.36-1.43-.36-2.2s.13-1.51.36-2.2L1.24 7.34C.44 8.94 0 10.74 0 12.6s.44 3.66 1.24 5.26l3.84-3.14z"/><path fill="#34A853" d="M12 23c3.24 0 5.97-1.08 7.96-2.92l-3.8-2.95c-1.05.7-2.4 1.13-4.16 1.13-3.24 0-5.98-2.16-6.96-5.68l-3.84 2.98C3.2 20.26 7.24 23 12 23z"/></svg>
-                    <span id="btn-google">التسجيل بواسطة Google</span>
+                    <span id="txt-google">التسجيل بواسطة Google</span>
                 </button>
             </div>
 
@@ -55,7 +57,7 @@
                 </div>
                 <div>
                     <label id="lbl-password" class="block text-xs font-medium mb-1 text-slate-400">كلمة المرور</label>
-                    <input type="password" placeh]older="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-cyan-500 transition-colors" required>
+                    <input type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-cyan-500 transition-colors" required>
                 </div>
                 <button type="submit" id="btn-submit" class="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold py-2.5 rounded-xl shadow-lg text-sm transition-all cursor-pointer">
                     إنشاء حساب
@@ -96,25 +98,32 @@
     </footer>
 
     <script>
-        // ربط مشروعك الحقيقي بـ Supabase
+        // 1. تهيئة مشروع Supabase
         const SUPABASE_URL = "https://xqpagwwjegporkgyvkdw.supabase.co"; 
-        const SUPABASE_ANON_KEY = "sb_publishable_EHK8PHZFyKPIOwGb7tey1w_oMSdC5u0A"; // <--- ضع مفتاحك الكامل هنا
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const SUPABASE_ANON_KEY = "sb_publishable_EHK8PHZFyKPIOwGb7tey1w_oMSdC5u0A"; 
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // الدالة الرسمية التي تستدعي نافذة غوغل المنبثقة
+        // 2. ربط الأحداث عند تحميل الصفحة بالكامل
+        document.addEventListener('DOMContentLoaded', () => {
+            const googleBtn = document.getElementById('btn-google');
+            if (googleBtn) {
+                googleBtn.addEventListener('click', loginWithGoogle);
+            }
+        });
+
+        // 3. الدالة الرسمية لتسجيل الدخول عبر Google
         async function loginWithGoogle() {
             try {
-                const { data, error } = await supabase.auth.signInWithOAuth({
+                const { data, error } = await supabaseClient.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                        redirectTo: window.location.href 
+                        redirectTo: window.location.origin
                     }
                 });
                 if (error) throw error;
             } catch (error) {
-                console.error("خطأ في الاتصال الفعلي:", error.message);
-                // محاكاة للتنقل السريع في البيئة المحلية قبل رفع الموقع أونلاين
-                handleLogin(); 
+                console.error("خطأ أثناء الاتصال بغوغل:", error.message);
+                alert("حدث خطأ أثناء الاتصال بغوغل: " + error.message);
             }
         }
 
@@ -127,7 +136,7 @@
             alert("رائع! اخترت شعبة: " + branchName + "\nالمرحلة القادمة هي بناء واجهة المواد والترتيب!");
         }
 
-        // نظام الترجمة
+        // 4. نظام الترجمة المتقدم واللغات
         const translations = {
             ar: {
                 title: "انضم إلى أبطال الأولى باك", subtitle: "سجل حسابك لتخوض التحدي وتجمع نقاط التميز",
@@ -157,7 +166,7 @@
 
             document.getElementById('auth-title').innerText = translations[lang].title;
             document.getElementById('auth-subtitle').innerText = translations[lang].subtitle;
-            document.getElementById('btn-google').innerText = translations[lang].google;
+            document.getElementById('txt-google').innerText = translations[lang].google;
             document.getElementById('auth-or').innerText = translations[lang].or;
             document.getElementById('lbl-email').innerText = translations[lang].email;
             document.getElementById('lbl-password').innerText = translations[lang].pass;
@@ -167,31 +176,4 @@
         }
     </script>
 </body>
-<script>
-  // التأكد من ربط الزر بالدالة عند تحميل الصفحة
-  document.addEventListener('DOMContentLoaded', () => {
-    const googleBtn = document.getElementById('btn-google'); // أو اسم الـ ID الخاص بزر غوغل عندك
-    if (googleBtn) {
-      googleBtn.addEventListener('click', loginWithGoogle);
-    }
-  });
-
-  // الدالة السحرية لفتح نافذة غوغل
-  async function loginWithGoogle() {
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          // سيتم توجيه المستخدم بعد اختيار حسابه إلى موقعك الحقيقي مباشرة
-          redirectTo: window.location.origin 
-        }
-      });
-      
-      if (error) throw error;
-    } catch (error) {
-      console.error('خطأ في تسجيل الدخول:', error.message);
-      alert('حدث خطأ أثناء الاتصال بغوغل: ' + error.message);
-    }
-  }
-</script>
 </html>
